@@ -7,26 +7,115 @@
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    const root = document.getElementById("root");
-    const Title = (
-        <h3 id="title" onMouseEnter={() => console.log("mouse enter")} >
-          Hello I'm a title
-        </h3>
+    function MinutesToHours() {
+      const [amount, setAmount] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+      const onChange = (event) => {
+        setAmount(event.target.value);
+      };
+      const reset = () => setAmount(0);
+      const onFlip = () => {
+        reset();
+        setInverted((current) => !current);
+      }
+
+      return (
+        <div>
+          <div>
+            <label htmlFor="minutes">Minutes</label>
+            <input
+              value={inverted ? amount * 60 : amount}
+              id="minutes"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+              disabled={inverted === true}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              value={inverted ? amount : Math.round(amount/60)}
+              id="hours"
+              placeholder="Hours"
+              type="number"
+              onChange={onChange}
+              disabled={inverted === false}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onFlip}>{inverted ? "Turn back" : "Invert"}</button>
+        </div>
       );
-      const Button = (
-        <button
-          style={{backgroundColor: "tomato"}}
-          onClick={() => console.log('Im clicked')}>
-          Click me
-        </button>
-      )
-    // const h3 = React.createElement("h3", {
-    //   onMouseEnter: () => console.log("mouse enter")
-    // }, "Hello, I'm a span");
-    // const btn = React.createElement("button", {
-    //   onClick: () => console.log('Im clicked')
-    // }, "Click me");
-    const container = React.createElement("div", null, [Title, Button]);
-    ReactDOM.render(container, root);
+    }
+
+    function KmToMiles() {
+      const [distance, setDistance] = React.useState(0);
+      const [inverted, setInverted] = React.useState(false);
+      const onChange = (event) => {
+        setDistance(event.target.value);
+      };
+      const reset = () => setDistance(0);
+      const onFlip = () => {
+        reset();
+        setInverted((current) => !current);
+      }
+
+      return (
+        <div>
+          <h3>KM 2 M</h3>
+          <div>
+            <label htmlFor="km">Kilometers</label>
+            <input
+              value={inverted ? Math.round(distance * 16) / 10 : distance}
+              id="km"
+              placeholder="Km"
+              type="number"
+              onChange={onChange}
+              disabled={inverted === true}
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="miles">Miles</label>
+            <input
+              value={inverted ? distance : Math.round(distance / 0.16) / 10}
+              id="miles"
+              placeholder="Miles"
+              type="number"
+              onChange={onChange}
+              disabled={inverted === false}
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
+          <button onClick={onFlip}>{inverted ? "Turn back" : "Invert"}</button>
+        </div>
+      );
+    }
+
+    function App() {
+      const [index, setIndex] = React.useState("xx");
+      const onSelect = (event) => {
+        setIndex(event.target.value);
+      }
+      return (
+        <div>
+          <h1>Super Converter</h1>
+          <select value={index} onChange={onSelect}>
+            <option value="xx">Select your units</option>
+            <option value="0">Minutes & Hours</option>
+            <option value="1">Km & Miltes</option>  
+          </select>
+          <hr />
+          {index === "xx" ? "Please select your units" : null}
+          {index === "0" ? <MinutesToHours /> : null}
+          {index === "1" ? <KmToMiles /> : null}
+        </div>
+      );
+    }
+
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
   </script>
 </html>
